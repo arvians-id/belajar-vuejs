@@ -1,5 +1,5 @@
-# vuejs
-Belajar Vue JS
+# VUE JS
+Learn Vue JS
 
 1. Basic Vue JS
 2. JSON
