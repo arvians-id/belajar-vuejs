@@ -3,13 +3,13 @@ const Form = {
     template: ` <div>
                     <form @submit.prevent="$emit('add-barang')" class="pb-3">
                         <div class="row pb-3">
-                            <div class="col-6">
+                            <div class="col-12 col-md-6">
                                 <input type="text" placeholder="Nama Barang" v-model="barang.title" class="form-control" required>
                             </div>
                         </div>
                         <div class="row pb-3">
-                            <div class="col-6">
-                                <input type="number" placeholder="Harga Barang" v-model="barang.price" class="form-control" required>
+                            <div class="col-12 col-md-6">
+                                <input type="number" placeholder="Harga Barang" v-model.number="barang.price" class="form-control" required>
                             </div>
                         </div>
                         <button type="submit" class="btn btn-primary">Tambah</button>
@@ -25,7 +25,7 @@ const Home = {
         },
     },
     template: ` <div>
-                    <table class="table table-striped">
+                    <table class="table table-bordered table-striped no-wrap">
                         <thead>
                             <tr>
                                 <th>No</th>
@@ -37,7 +37,7 @@ const Home = {
                         </thead>
                         <tbody>
                             <template v-if="loading">
-                                <tr><td colspan="5" :class="{ loads: loading }">Loading </td></tr>
+                                <tr><td colspan="5" :class="{ loads: loading }" class="text-center">Loading </td></tr>
                             </template>
                             <template v-else>
                                 <template v-if="errors.status == false">
@@ -48,21 +48,20 @@ const Home = {
                                                 <img :src="showImage(brg.image)" width="50">
                                             </td>
                                             <td>{{ brg.title }}</td>
-                                            <td>{{ '$' + brg.price }}</td>
+                                            <td>\${{ brg.price }}</td>
                                             <td>
-                                                <button @click="$emit('delete-barang', brg.id,i)" class="btn btn-danger btn-sm">Delete</button>
-                                                |
-                                                <button @click="$emit('add-to-cart', brg.id)" class="btn btn-secondary btn-sm">+</button>
-                                                <button @click="$emit('remove-from-cart', brg.id)" class="btn btn-secondary btn-sm">-</button>
+                                                <button @click="$emit('delete-barang', brg.id,i)" class="btn btn-danger mt-1 btn-sm">Delete</button>
+                                                <button @click="$emit('add-to-cart', brg.id)" class="btn btn-secondary mt-1 btn-sm">+</button>
+                                                <button @click="$emit('remove-from-cart', brg.id)" class="btn btn-secondary mt-1 btn-sm">-</button>
                                             </td>
                                         </tr>
                                     </template>
                                     <template v-else>
-                                            <tr><td colspan="5">Data Not Found</td></tr>
+                                            <tr><td colspan="5" class="text-center">Data Not Found</td></tr>
                                     </template>
                                 </template>
                                 <template v-else>
-                                    <tr><td colspan="5">{{ errors.message }}</td></tr>
+                                    <tr><td colspan="5" class="text-center">{{ errors.message }}</td></tr>
                                 </template>
                             </template>
                         </tbody>
@@ -71,10 +70,10 @@ const Home = {
                         <h3>Keranjang Anda</h3>
                         <ul>
                             <li v-for="cart in carts" :key="cart.id">
-                                Barang : {{ cart.title }} | Price : {{ '$' + cart.price }} | Total : {{ cart.qty }}
+                                Barang : {{ cart.title }} | Price : \${{ cart.price }} | Total : {{ cart.qty }}
                             </li>
                         </ul>
-                        <p>Total Item {{ item }} <br> Total Harga {{ '$' + total }}</p>
+                        <p>Total Item {{ item }} <br> Total Harga \${{ total }}</p>
                     </div>
                 </div>`
 }

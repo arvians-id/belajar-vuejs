@@ -6,7 +6,7 @@ Vue.component('header-component', {
     },
     template: ` <header>
                     <nav class="navbar navbar-expand-lg navbar-light bg-light border">
-                        <a class="navbar-brand" href="#">{{ firstData }}</a>
+                        <router-link class="navbar-brand" :to="{ name: 'home' }">{{ firstData }}</router-link>
                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
                         </button>
@@ -37,9 +37,9 @@ Vue.component('cart-component', {
                     <h3>Keranjang Anda</h3>
                     <ul>
                         <li v-for="cart in carts" :key="cart.id">
-                            Barang : {{ cart.title }} | Price : {{ '$' + cart.price }} | Total : {{ cart.qty }}
+                            Barang : {{ cart.title }} | Price : \${{ cart.price }} | Total : {{ cart.qty }}
                         </li>
                     </ul>
-                    <p>Total Item {{ item }} <br> Total Harga {{ '$' + total }}</p>
+                    <p>Total Item {{ item }} <br> Total Harga \${{ total }}</p>
                 </div>`
 });

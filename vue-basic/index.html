@@ -12,27 +12,31 @@
 </head>
 
 <body>
-    <div id="app" class="p-5 col-8">
-        <header-component>
-            <p class="mb-3 mt-3 text-info">Belajar Javascript Vue JS - Basic Vue JS</p>
-        </header-component>
-
-            <router-view 
-                :barang="barang" 
-                v-on:add-barang="addBarang" 
-                v-on:delete-barang="deleteBarang" 
-                v-on:add-to-cart="addToCart" 
-                v-on:remove-from-cart="removeFromCart" 
-                :total="totalHarga" 
-                :carts="carts" 
-                :item="totalItem" 
-                :loading="loading" 
-                :errors="errors">
-            </router-view>
-
-        <hr>
-
-        <footer-component></footer-component>
+    <div id="app" class="p-3 col-12 col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <header-component>
+                    <p class="mb-3 mt-3 text-info">Belajar Javascript Vue JS - Basic Vue JS</p>
+                </header-component>
+        
+                    <router-view 
+                        :barang="barang" 
+                        v-on:add-barang="addBarang" 
+                        v-on:delete-barang="deleteBarang" 
+                        v-on:add-to-cart="addToCart" 
+                        v-on:remove-from-cart="removeFromCart" 
+                        :total="totalHarga" 
+                        :carts="carts" 
+                        :item="totalItem" 
+                        :loading="loading" 
+                        :errors="errors"
+                    />
+        
+                <hr>
+        
+                <footer-component />
+            </div>
+        </div>
     </div>
 
     <!-- Main JS -->
@@ -41,109 +45,10 @@
     <script src="assets/js/vue-router.js"></script>
     <script src="router/index.js"></script>
     <script src="components/index.js"></script>
+    <script src="main.js"></script>
     <!-- Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script>
-        const app = new Vue({
-            el: '#app',
-            router,
-            data() {
-                return {
-                    id: 0,
-                    barang: {
-                        title: '',
-                        price: ''
-                    },
-                    data: [],
-                    carts: [],
-                    totalHarga: 0,
-                    loading: true,
-                    errors: {
-                        status: false,
-                        message: ''
-                    }
-                };
-            },
-            mounted() {
-                const path = 'https://fakestoreapi.com/products?limit=5'
-                axios.get(path)
-                    .then(response => this.barang = response.data.map(e => ({
-                        ...e,
-                        qty: 0
-                    })))
-                    .catch(error => {
-                        this.errors.status = true;
-                        this.errors.message = error.message;
-                    })
-                    .finally(() => this.loading = false);
-            },
-            computed: {
-                totalItem() {
-                    let data = this.carts.map(e => parseInt(e.qty));
-                    return this.carts != '' ? data.reduce((item, i) => item += i) : '0';
-                }
-            },
-            methods: {
-                addBarang(e) {
-                    let data = {
-                        id: this.barang.length + 1,
-                        title: this.barang.title,
-                        price: this.barang.price,
-                        image: null,
-                        qty: 0
-                    };
-                    this.barang.push(data);
-
-                    this.barang.title = '';
-                    this.barang.price = '';
-
-                    router.push({ name: 'home' })
-                },
-                deleteBarang(id, index) {
-                    let cart = this.carts.filter(item => item.id_barang == id);
-                    if (cart.length) {
-                        let countCart = cart.map(item => parseInt(item.price) * parseInt(item.qty));
-                        let priceCart = countCart.reduce((item, i) => item += i);
-                        this.totalHarga -= priceCart;
-
-                        this.carts = this.carts.filter(item => item.id !== cart[0].id)
-                    }
-                    this.barang.splice(index, 1);
-                },
-                addToCart(id) {
-                    let barang = this.barang.filter(item => item.id == id)[0];
-
-                    let cart = {
-                        id: this.id++,
-                        id_barang: barang.id,
-                        title: barang.title,
-                        price: barang.price,
-                        qty: 1
-                    };
-                    let getCart = this.carts.filter(item => item.id_barang == barang.id)[0];
-                    getCart ? getCart.qty++ : this.carts.push(cart);
-
-                    let countCart = this.carts.map(item => parseInt(item.price) * parseInt(item.qty));
-                    this.totalHarga = countCart.reduce((item, i) => item += i);
-                },
-                removeFromCart(id) {
-                    let getCart = this.carts.filter(item => item.id_barang == id)[0];
-                    if (getCart != undefined) {
-                        if (this.totalHarga > 0 && getCart.qty > 0) {
-                            getCart.qty--;
-                            this.totalHarga -= parseInt(getCart.price);
-                        }
-
-                        if (getCart.qty == 0) {
-                            this.carts = this.carts.filter(item => item.id !== getCart.id)
-                        }
-                    }
-                },
-            }
-        })
-    </script>
 </body>
 
 </html>
